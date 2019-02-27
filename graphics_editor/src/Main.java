@@ -1,9 +1,10 @@
-import drawing.ShapeFrame;
-import java.awt.*;
+import views.MainFrame;
+
+import java.awt.Frame;
 
 public class Main {
     public static void main(String[] args) {
-        Frame shapeFrame = new ShapeFrame("Graphics editor");
+        Frame shapeFrame = new MainFrame("Graphics editor");
         shapeFrame.setVisible(true);
     }
 }
