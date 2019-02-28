@@ -1,0 +1,102 @@
+package object_serialization.view;
+
+import object_serialization.commands.AbstractCommand;
+import javafx.util.Pair;
+import object_serialization.plugin.ProductPluginManager;
+import object_serialization.products.Product;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Product menu
+ */
+public class ProductMenu {
+    private List<Pair<String, Runnable>> menuCommands;
+    private List<Product> productList;
+    private BufferedReader bufferedReader;
+    private ProductPluginManager productPluginManager;
+
+    /**
+     * Returns product list
+     *
+     * @return product list
+     */
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public List<Class> getProductNameList() {
+        return productPluginManager.getProducts();
+    }
+
+    public ProductPluginManager getProductPluginManager() {
+        return productPluginManager;
+    }
+
+    /**
+     * Sets product list
+     *
+     * @param productList product list
+     */
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
+
+    public ProductMenu(ProductPluginManager productPluginManager) {
+        productList = new ArrayList<>();
+        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        this.productPluginManager = productPluginManager;
+        menuCommands = new ArrayList<>();
+        productPluginManager.setProductMenu(this);
+        setMenuCommands();
+    }
+
+    /**
+     * Set available commands into menu
+     */
+    private void setMenuCommands() {
+        List<AbstractCommand> commands = productPluginManager.getCommands();
+        int index = 0;
+        for (AbstractCommand productCommand : commands) {
+            menuCommands.add(new Pair<>(index++ + ": " + productCommand.getCommandName(), productCommand));
+        }
+    }
+
+    /**
+     * Runs menu command
+     */
+    public void runMenu() {
+        do {
+            System.out.println("Choose option:");
+            menuCommands.forEach(p -> System.out.println(p.getKey()));
+
+            Integer commandIndex = getCommandIndex();
+            if (isValidCommandIndex(commandIndex)) {
+                Runnable action = menuCommands.get(commandIndex).getValue();
+                action.run();
+                break;
+            } else {
+                System.out.println("Please, input number: 0-" + (menuCommands.size() - 1));
+            }
+        } while (true);
+    }
+
+    private Integer getCommandIndex() {
+        Integer commandIndex = null;
+        try {
+            String userInput = bufferedReader.readLine();
+            commandIndex = Integer.parseInt(userInput);
+        } catch (IOException | NumberFormatException ignored) {
+        }
+
+        return commandIndex;
+    }
+
+    private boolean isValidCommandIndex(Integer commandIndex) {
+        return commandIndex != null && commandIndex.compareTo(menuCommands.size()) < 0;
+    }
+}
