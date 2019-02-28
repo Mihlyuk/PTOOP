@@ -1,6 +1,6 @@
 package shapes;
 
-import drawing.Drawer;
+import drawers.Drawer;
 
 /**
  * Shape interface

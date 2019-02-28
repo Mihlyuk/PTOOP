@@ -1,7 +1,7 @@
 package shapes.base;
 
-import drawing.PolygonDrawer;
-import drawing.Drawer;
+import drawers.PolygonDrawer;
+import drawers.Drawer;
 import shapes.Shape;
 
 import java.util.ArrayList;

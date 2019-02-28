@@ -1,7 +1,7 @@
 package shapes;
 
-import drawing.CircleDrawer;
-import drawing.Drawer;
+import drawers.CircleDrawer;
+import drawers.Drawer;
 import shapes.base.PointShape;
 
 import java.util.ArrayList;

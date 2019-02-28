@@ -12,24 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import shapes.Shape;
-import shapes.ShapeList;
 import utils.ClassSearcher;
 
 public class MainFrame extends JFrame {
-    private ShapeList shapeList;
-    private JPanel shapeDrawPanel;
+    private ShapeDrawingPanel shapeDrawPanel;
     private JPanel toolsPanel;
 
     public MainFrame(String title) throws HeadlessException {
-        shapeList = new ShapeList();
-
         setTitle(title);
         setSize(700, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Initialize shape drawing panel
-        shapeDrawPanel = new ShapeDrawingPanel(shapeList);
-        shapeDrawPanel.setPreferredSize(new Dimension(600, 500));
+        // Initialize shape drawers panel
+        shapeDrawPanel = new ShapeDrawingPanel();
         add(shapeDrawPanel, BorderLayout.CENTER);
 
         // Initialize tools panel
@@ -74,7 +69,7 @@ public class MainFrame extends JFrame {
 
             try {
                 Shape newShape = buildNewShape(shapeClass, shapeFields);
-                shapeList.add(newShape);
+                shapeDrawPanel.addShape(newShape);
                 shapeDrawPanel.repaint();
             } catch (NoSuchMethodException e1) {
                 JOptionPane.showMessageDialog(this, "Shape inheritor should have 'constructShape' method.", "Error", JOptionPane.ERROR_MESSAGE);

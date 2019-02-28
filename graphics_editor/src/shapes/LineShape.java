@@ -1,7 +1,7 @@
 package shapes;
 
-import drawing.Line2DDrawer;
-import drawing.Drawer;
+import drawers.LineDrawer;
+import drawers.Drawer;
 import shapes.base.PointShape;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class LineShape implements Shape {
     public LineShape(PointShape p1, PointShape p2) {
         this.p1 = p1;
         this.p2 = p2;
-        shapeDrawer = new Line2DDrawer(this);
+        shapeDrawer = new LineDrawer(this);
     }
 
     public PointShape getP1() {
