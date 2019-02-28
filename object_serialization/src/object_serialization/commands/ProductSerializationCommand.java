@@ -1,8 +1,8 @@
 package object_serialization.commands;
 
 import object_serialization.view.ProductMenu;
-import object_serialization.plugin.ProductPlugin;
-import object_serialization.plugin.ProductPluginManager;
+import object_serialization.products.ProductPlugin;
+import object_serialization.products.ProductPluginManager;
 import object_serialization.products.Product;
 import com.fasterxml.jackson.core.JsonGenerator;
 import de.undercouch.bson4jackson.BsonFactory;
@@ -13,6 +13,7 @@ import java.util.List;
 
 @CommandItem
 public class ProductSerializationCommand extends AbstractCommand {
+
     public ProductSerializationCommand(ProductMenu productMenu) {
         super(productMenu);
     }
@@ -31,7 +32,8 @@ public class ProductSerializationCommand extends AbstractCommand {
      * Starts serialize products
      */
     private void runSerializeProductList() {
-        String serializeFilePath = "src/main/java/productSerialize";
+        String serializeFilePath = "object_serialization/resources/products.bson";
+
         try {
             File serializeFile = new File(serializeFilePath);
             OutputStream os = new FileOutputStream(serializeFile);
@@ -58,14 +60,15 @@ public class ProductSerializationCommand extends AbstractCommand {
 
     /**
      * Serializes products
+     *
      * @param jg JsonGenerator object
      * @throws IOException writing error
      */
     private void serializeProducts(JsonGenerator jg) throws IOException {
-        List<Product> productList = productMenu.getProductList();
         jg.writeStartObject();
         jg.writeArrayFieldStart("object_serialization/products");
-        for (Product p : productList) {
+
+        for (Product p : products) {
             jg.writeStartObject();
             jg.writeFieldName("productType");
             jg.writeString(p.getClass().getName());
@@ -77,6 +80,7 @@ public class ProductSerializationCommand extends AbstractCommand {
             jg.writeNumber(p.getWeight());
             jg.writeEndObject();
         }
+
         jg.writeEndArray();
         jg.writeEndObject();
     }

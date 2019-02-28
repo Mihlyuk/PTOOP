@@ -1,20 +1,31 @@
 package object_serialization.commands;
 
+import object_serialization.products.Product;
 import object_serialization.view.ProductMenu;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.List;
 
 /**
- * Base class for command
+ * Base class for commands.
+ * Each class must implement the run method.
  */
 public abstract class AbstractCommand implements Runnable {
     protected ProductMenu productMenu;
-    protected BufferedReader bufferedReader;
+    protected List<Class> productNames;
+    protected List<Product> products;
 
     protected AbstractCommand(ProductMenu productMenu) {
         this.productMenu = productMenu;
-        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        this.productNames = productMenu.getProductNameList();
+        this.products = productMenu.getProductList();
+    }
+
+    Integer readInteger() {
+        return productMenu.readInteger();
+    }
+
+    String readString() {
+        return productMenu.readString();
     }
 
     public abstract String getCommandName();

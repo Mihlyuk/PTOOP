@@ -4,10 +4,13 @@ import object_serialization.view.ProductMenu;
 import object_serialization.products.Product;
 
 import java.io.IOException;
-import java.util.List;
 
+/**
+ * Adds the ability to change product information.
+ */
 @CommandItem
 public class EditProductCommand extends AbstractCommand {
+
     public EditProductCommand(ProductMenu productMenu) {
         super(productMenu);
     }
@@ -19,21 +22,15 @@ public class EditProductCommand extends AbstractCommand {
 
     @Override
     public void run() {
-        runEditingProduct();
-    }
-
-    /**
-     * Starts edit command
-     */
-    private void runEditingProduct() {
-        List<Product> productList = productMenu.getProductList();
-        if (productList.isEmpty()) {
+        if (products.isEmpty()) {
             System.out.println("Product list is empty.");
             return;
         }
+
         while (true) {
             System.out.println("Please, input index of product: ");
-            Integer productIndex = getProductItemIndex();
+
+            Integer productIndex = readInteger();
             if (isValidProductIndex(productIndex)) {
                 try {
                     editProduct(productIndex);
@@ -47,45 +44,28 @@ public class EditProductCommand extends AbstractCommand {
 
     /**
      * Edits parameters for product
+     *
      * @param productIndex index of product
-     * @throws IOException invalid parameter value
+     * @throws IOException           invalid parameter value
      * @throws NumberFormatException invalid parameter value
      */
     private void editProduct(int productIndex) throws IOException, NumberFormatException {
         System.out.println("Input cost:");
-        int cost = getIntegerFromUser();
+        int cost = readInteger();
+
         System.out.println("Input name:");
-        String name = getStringFromUser();
+        String name = readString();
+
         System.out.println("Input weight:");
-        int weight = getIntegerFromUser();
-        List<Product> productList = productMenu.getProductList();
-        Product product = productList.get(productIndex);
+        int weight = readInteger();
+
+        Product product = products.get(productIndex);
         product.setCost(cost);
         product.setName(name);
         product.setWeight(weight);
     }
 
-    private int getIntegerFromUser() throws IOException, NumberFormatException {
-        String userInput = getStringFromUser();
-        return Integer.parseInt(userInput);
-    }
-
-    private String getStringFromUser() throws IOException {
-        return bufferedReader.readLine();
-    }
-
-    private Integer getProductItemIndex() {
-        Integer productIndex = null;
-        try {
-            String userInput = bufferedReader.readLine();
-            productIndex = Integer.parseInt(userInput);
-        } catch (IOException | NumberFormatException ignored) {}
-
-        return productIndex;
-    }
-
     private boolean isValidProductIndex(Integer productIndex) {
-        List<Product> productList = productMenu.getProductList();
-        return productIndex != null && productIndex.compareTo(productList.size()) < 0;
+        return productIndex != null && productIndex.compareTo(products.size()) < 0;
     }
 }

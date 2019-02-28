@@ -4,6 +4,7 @@ import object_serialization.view.ProductMenu;
 
 @CommandItem
 public class ExitCommand extends AbstractCommand {
+
     public ExitCommand(ProductMenu productMenu) {
         super(productMenu);
     }
@@ -15,6 +16,7 @@ public class ExitCommand extends AbstractCommand {
 
     @Override
     public void run() {
+        System.out.println("Goodbye!");
         System.exit(0);
     }
 }

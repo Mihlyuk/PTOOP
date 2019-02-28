@@ -1,8 +1,8 @@
 package object_serialization.commands;
 
 import object_serialization.view.ProductMenu;
-import object_serialization.plugin.ProductPlugin;
-import object_serialization.plugin.ProductPluginManager;
+import object_serialization.products.ProductPlugin;
+import object_serialization.products.ProductPluginManager;
 import object_serialization.products.Product;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -16,6 +16,7 @@ import java.util.List;
 
 @CommandItem
 public class ProductDeserializationCommand extends AbstractCommand {
+
     public ProductDeserializationCommand(ProductMenu productMenu) {
         super(productMenu);
     }
@@ -25,16 +26,12 @@ public class ProductDeserializationCommand extends AbstractCommand {
         return "Deserialize products";
     }
 
-    @Override
-    public void run() {
-        runDeserializeProductList();
-    }
-
     /**
      * Starts deserialize product list
      */
-    private void runDeserializeProductList() {
-        String deserializeFileName = "src/main/java/productSerialize";
+    @Override
+    public void run() {
+        String deserializeFileName = "object_serialization/resources/products.bson";
         try {
             FileInputStream fis = new FileInputStream(new File(deserializeFileName));
             BufferedInputStream bis = new BufferedInputStream(fis);
@@ -63,8 +60,9 @@ public class ProductDeserializationCommand extends AbstractCommand {
 
     /**
      * Deserialize list of products
+     *
      * @param jp JsonParses object
-     * @throws IOException Invalid bson file format
+     * @throws IOException            Invalid bson file format
      * @throws ClassNotFoundException Invalid bson file format
      * @throws IllegalAccessException Invalid bson file format
      * @throws InstantiationException Invalid bson file format
@@ -88,9 +86,10 @@ public class ProductDeserializationCommand extends AbstractCommand {
 
     /**
      * Parse product from BSON
+     *
      * @param jp JsonParses object
      * @return new Product object
-     * @throws IOException Invalid bson file format
+     * @throws IOException            Invalid bson file format
      * @throws ClassNotFoundException Invalid bson file format
      * @throws IllegalAccessException Invalid bson file format
      * @throws InstantiationException Invalid bson file format

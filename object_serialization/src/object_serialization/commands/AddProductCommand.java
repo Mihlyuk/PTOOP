@@ -1,18 +1,16 @@
 package object_serialization.commands;
 
-import object_serialization.view.ProductMenu;
 import object_serialization.products.Product;
+import object_serialization.view.ProductMenu;
 
-import java.io.IOException;
-import java.util.List;
-
+/**
+ * Command to add products
+ */
 @CommandItem
 public class AddProductCommand extends AbstractCommand {
-    private List<Class> productNameList;
 
     public AddProductCommand(ProductMenu productMenu) {
         super(productMenu);
-        productNameList = productMenu.getProductNameList();
     }
 
     @Override
@@ -22,26 +20,22 @@ public class AddProductCommand extends AbstractCommand {
 
     @Override
     public void run() {
-        runProductChooser();
-    }
-
-    /**
-     * Allow user to choose type of product to add
-     */
-    private void runProductChooser() {
-        if (productNameList.isEmpty()) {
+        if (productNames.isEmpty()) {
             System.out.println();
             return;
         }
-        while(true) {
-            printAllProductItems();
-            Integer productItemIndex = getProductItemIndex();
+
+        while (true) {
+            for (int i = 0; i < productNames.size(); i++) {
+                System.out.println(String.format("%d: %s", i, productNames.get(i).getSimpleName()));
+            }
+
+            Integer productItemIndex = readInteger();
             if (isValidProductIndex(productItemIndex)) {
-                Class productClass = productNameList.get(productItemIndex);
+                Class productClass = productNames.get(productItemIndex);
                 try {
                     Product newProduct = (Product) productClass.newInstance();
-                    List<Product> productList = productMenu.getProductList();
-                    productList.add(newProduct);
+                    products.add(newProduct);
                     break;
                 } catch (InstantiationException e) {
                     System.err.println("Cannot instantiate object for " + productClass.getSimpleName());
@@ -49,28 +43,12 @@ public class AddProductCommand extends AbstractCommand {
                     System.err.println(productClass.getSimpleName() + " has no access for creation");
                 }
             } else {
-                System.out.println("Please, input number: 0-" + (productNameList.size() - 1));
+                System.out.println("Please, input number: 0-" + (productNames.size()));
             }
         }
     }
 
-    private Integer getProductItemIndex() {
-        Integer productIndex = null;
-        try {
-            String userInput = bufferedReader.readLine();
-            productIndex = Integer.parseInt(userInput);
-        } catch (IOException | NumberFormatException ignored) {}
-
-        return productIndex;
-    }
-
     private boolean isValidProductIndex(Integer productIndex) {
-        return productIndex != null && productIndex.compareTo(productNameList.size()) < 0;
-    }
-
-    private void printAllProductItems() {
-        for (int i = 0; i < productNameList.size(); i++) {
-            System.out.println(String.format("%d: %s", i, productNameList.get(i).getSimpleName()));
-        }
+        return productIndex != null && productIndex.compareTo(productNames.size()) < 0;
     }
 }
