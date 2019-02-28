@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import shapes.Shape;
 import shapes.ShapeList;
 import utils.ClassSearcher;
@@ -19,41 +18,38 @@ import utils.ClassSearcher;
 public class MainFrame extends JFrame {
     private ShapeList shapeList;
     private JPanel shapeDrawPanel;
+    private JPanel toolsPanel;
 
     public MainFrame(String title) throws HeadlessException {
-        this.shapeList = new ShapeList();
+        shapeList = new ShapeList();
 
         setTitle(title);
         setSize(700, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        initDrawPanel();
-        initShapeButtonPanel();
-    }
-
-    private void initDrawPanel() {
-        shapeDrawPanel = new ShapeDrawingPanel();
+        // Initialize shape drawing panel
+        shapeDrawPanel = new ShapeDrawingPanel(shapeList);
         shapeDrawPanel.setPreferredSize(new Dimension(600, 500));
         add(shapeDrawPanel, BorderLayout.CENTER);
+
+        // Initialize tools panel
+        toolsPanel = new JPanel();
+        toolsPanel.setBorder(BorderFactory.createEtchedBorder());
+        toolsPanel.setPreferredSize(new Dimension(200, 500));
+        add(toolsPanel, BorderLayout.EAST);
+
+        updateToolsPanel();
     }
 
-    /**
-     * Builds buttons for creating shapes
-     */
-    private void initShapeButtonPanel() {
-        JPanel shapeButtonPanel = new JPanel();
-        shapeButtonPanel.setBorder(BorderFactory.createEtchedBorder());
-        shapeButtonPanel.setPreferredSize(new Dimension(200, 500));
+    private void updateToolsPanel() {
         List<Class> shapeClasses = getShapeClasses();
 
         for (Class shapeClass : shapeClasses) {
             JButton jButton = new JButton(shapeClass.getSimpleName());
             jButton.setPreferredSize(new Dimension(150, 30));
             jButton.addActionListener(buttonActionListener(shapeClass));
-            shapeButtonPanel.add(jButton);
+            toolsPanel.add(jButton);
         }
-
-        add(shapeButtonPanel, BorderLayout.EAST);
     }
 
     /**
@@ -99,6 +95,7 @@ public class MainFrame extends JFrame {
      */
     private void buildShapeFieldsDialog(Map<String, JSpinner> shapeFields, List<String> shapePropertiesNames) {
         List<Component> windowFields = new ArrayList<>();
+
         for (String propertyName : shapePropertiesNames) {
             JLabel fieldLabel = new JLabel(propertyName);
             JSpinner numberSpinner = new JSpinner(new SpinnerNumberModel());
@@ -106,6 +103,7 @@ public class MainFrame extends JFrame {
             windowFields.add(fieldLabel);
             windowFields.add(numberSpinner);
         }
+
         JOptionPane.showConfirmDialog(this, windowFields.toArray(), "Input values.", JOptionPane.PLAIN_MESSAGE);
     }
 

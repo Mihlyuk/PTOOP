@@ -13,6 +13,7 @@ public class CircleShape implements Shape {
     private PointShape center;
     private Drawer shapeDrawer;
     public static List<String> propertyNames = new ArrayList<>();
+
     static {
         propertyNames.add("Radius");
         propertyNames.add("Center x");
@@ -55,6 +56,7 @@ public class CircleShape implements Shape {
 
     /**
      * Construct new CircleShape instance which is built from properties
+     *
      * @param propertiesValues properties for circle
      * @return new CircleShape instance
      */

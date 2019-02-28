@@ -25,6 +25,6 @@ public class CircleDrawer implements Drawer {
 
     @Override
     public void draw(Graphics2D graphics2D) {
-        graphics2D.draw(new Ellipse2D.Double(circle.getCenter().getX(), circle.getCenter().getY(), circle.getR(), circle.getR()));
+            graphics2D.draw(new Ellipse2D.Double(circle.getCenter().getX(), circle.getCenter().getY(), circle.getR(), circle.getR()));
     }
 }
