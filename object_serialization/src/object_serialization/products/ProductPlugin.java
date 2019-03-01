@@ -1,4 +1,4 @@
-package object_serialization.plugin;
+package object_serialization.products;
 
 import object_serialization.commands.AbstractCommand;
 
@@ -7,18 +7,18 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * Product plugin
+ * Product plugins
  */
 public interface ProductPlugin {
     /**
-     * Gets commands from plugin
-     * @return commands from plugin
+     * Gets commands from plugins
+     * @return commands from plugins
      */
     List<AbstractCommand> getCommands();
 
     /**
-     * Gets products from plugin
-     * @return products from plugin
+     * Gets products from plugins
+     * @return products from plugins
      */
     List<Class> getProducts();
 

@@ -1,4 +1,4 @@
-package object_serialization.plugin;
+package object_serialization.products;
 
 import object_serialization.view.ProductMenu;
 import object_serialization.commands.AbstractCommand;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Product plugin implementation to retrieve commands and products from jars
+ * Product plugins implementation to retrieve commands and products from jars
  */
 public class ProductPluginManager implements ProductPlugin {
     private List<String> jars;
@@ -26,51 +26,33 @@ public class ProductPluginManager implements ProductPlugin {
         buildProductPlugins();
     }
 
-    public ProductMenu getProductMenu() {
-        return productMenu;
-    }
-
-    public void setProductMenu(ProductMenu productMenu) {
-        this.productMenu = productMenu;
-    }
-
-    public URLClassLoader getUrlClassLoader() {
-        return urlClassLoader;
-    }
-
-    public List<String> getJars() {
-        return jars;
-    }
-
-    public List<ProductPlugin> getProductPlugins() {
-        return productPlugins;
-    }
-
     private void buildClassLoader() {
         List<URL> urls = new ArrayList<>();
+
         for (String jar : jars) {
             File jarFile = new File(jar);
+
             try {
                 urls.add(jarFile.toURI().toURL());
             } catch (MalformedURLException e) {
                 System.err.println(jarFile + " is invalid.");
             }
         }
+
         urlClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), this.getClass().getClassLoader());
     }
 
     private void buildProductPlugins() {
         for (String jar : jars) {
             ProductPlugin productPlugin = getProductPlugin(jar);
-            if (productPlugin != null) {
-                productPlugins.add(productPlugin);
-            }
+            if (productPlugin != null) productPlugins.add(productPlugin);
         }
     }
 
     @Override
     public List<AbstractCommand> getCommands() {
         List<AbstractCommand> commands = new ArrayList<>();
+
         for (ProductPlugin productPlugin : productPlugins) {
             commands.addAll(productPlugin.getCommands());
         }
@@ -98,14 +80,29 @@ public class ProductPluginManager implements ProductPlugin {
     private ProductPlugin getProductPlugin(String jar) {
         try {
             File jarFile = new File(jar);
-            String productImplPackage = "object_serialization.plugin";
-            String productImplPath = productImplPackage + "." + jarFile.getName().substring(0, jarFile.getName().length() - 4);
-            return (ProductPlugin) Class.forName( productImplPath + "Impl", true, urlClassLoader).newInstance();
+            String productImplPackage = "object_serialization.plugins";
+            return (ProductPlugin) Class.forName(productImplPackage + "." + jarFile.getName(), true, urlClassLoader).newInstance();
         } catch (ClassNotFoundException ignored) {
             System.err.println(jar + " was not found.");
         } catch (IllegalAccessException | InstantiationException e) {
-            System.err.println(jar + " has a problem while creating plugin implementation: jarname + Impl.class");
+            System.err.println(jar + " has a problem while creating plugins implementation: jarname + Impl.class");
         }
         return null;
+    }
+
+    public ProductMenu getProductMenu() {
+        return productMenu;
+    }
+
+    public void setProductMenu(ProductMenu productMenu) {
+        this.productMenu = productMenu;
+    }
+
+    public URLClassLoader getUrlClassLoader() {
+        return urlClassLoader;
+    }
+
+    public List<ProductPlugin> getProductPlugins() {
+        return productPlugins;
     }
 }

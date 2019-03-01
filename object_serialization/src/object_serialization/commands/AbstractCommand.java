@@ -1,6 +1,7 @@
 package object_serialization.commands;
 
 import object_serialization.products.Product;
+import object_serialization.products.ProductPluginManager;
 import object_serialization.view.ProductMenu;
 
 import java.util.List;
@@ -13,18 +14,20 @@ public abstract class AbstractCommand implements Runnable {
     protected ProductMenu productMenu;
     protected List<Class> productNames;
     protected List<Product> products;
+    protected ProductPluginManager productPluginManager;
 
     protected AbstractCommand(ProductMenu productMenu) {
         this.productMenu = productMenu;
         this.productNames = productMenu.getProductNameList();
         this.products = productMenu.getProductList();
+        this.productPluginManager = productMenu.getProductPluginManager();
     }
 
-    Integer readInteger() {
+    public Integer readInteger() {
         return productMenu.readInteger();
     }
 
-    String readString() {
+    public String readString() {
         return productMenu.readString();
     }
 

@@ -15,6 +15,7 @@ import java.util.zip.Checksum;
  * Input stream which checks checksum
  */
 public class ChecksumInputStream extends ByteArrayInputStream {
+
     public ChecksumInputStream(byte[] buf) {
         super(validateChecksum(buf));
     }

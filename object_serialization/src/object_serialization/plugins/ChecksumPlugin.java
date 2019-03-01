@@ -1,9 +1,9 @@
-package object_serialization.plugin;
+package object_serialization.plugins;
 
 import object_serialization.commands.AbstractCommand;
-import object_serialization.commands.CheckSumCommand;
-import object_serialization.commands.checksum.ChecksumInputStream;
-import object_serialization.commands.checksum.ChecksumOutputStream;
+import object_serialization.plugins.commands.CheckSumCommand;
+import object_serialization.plugins.commands.checksum.ChecksumInputStream;
+import object_serialization.plugins.commands.checksum.ChecksumOutputStream;
 import object_serialization.products.ProductPlugin;
 
 import java.io.IOException;
@@ -14,14 +14,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Checksum plugin impl
+ * Checksum plugins impl
  */
-public class ChecksumPluginImpl implements ProductPlugin {
+public class ChecksumPlugin implements ProductPlugin {
     public static boolean VALIDATION = true;
 
     @Override
     public List<AbstractCommand> getCommands() {
-        return Arrays.asList(new CheckSumCommand(null));
+        return Collections.emptyList();
     }
 
     @Override

@@ -1,8 +1,7 @@
 package object_serialization.commands;
 
-import object_serialization.view.ProductMenu;
 import object_serialization.products.ProductPlugin;
-import object_serialization.products.ProductPluginManager;
+import object_serialization.view.ProductMenu;
 import object_serialization.products.Product;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -11,9 +10,11 @@ import de.undercouch.bson4jackson.BsonGenerator;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * Command to deserialize product list
+ */
 @CommandItem
 public class ProductDeserializationCommand extends AbstractCommand {
 
@@ -26,14 +27,13 @@ public class ProductDeserializationCommand extends AbstractCommand {
         return "Deserialize products";
     }
 
-    /**
-     * Starts deserialize product list
-     */
     @Override
     public void run() {
-        String deserializeFileName = "object_serialization/resources/products.bson";
+        String deserializeFileName = "/Users/konstantin/IdeaProjects/PTOOP/object_serialization/resources/products.bson";
+
         try {
-            FileInputStream fis = new FileInputStream(new File(deserializeFileName));
+            InputStream fis = new FileInputStream(new File(deserializeFileName));
+            fis = wrapStream(fis);
             BufferedInputStream bis = new BufferedInputStream(fis);
             BsonFactory bf = new BsonFactory();
             bf.enable(BsonGenerator.Feature.ENABLE_STREAMING);
@@ -41,23 +41,21 @@ public class ProductDeserializationCommand extends AbstractCommand {
             deserializeProducts(jp);
             jp.close();
         } catch (IOException e) {
-            System.err.println(deserializeFileName + " was not found.");
+            System.err.println(deserializeFileName + e.getMessage());
         } catch (IllegalAccessException | InstantiationException | ClassNotFoundException e) {
             System.err.println("File " + deserializeFileName + " has invalid format.");
         }
     }
 
-    private InputStream wrapStream(InputStream inputStream) {
-        ProductPluginManager productPluginManager = productMenu.getProductPluginManager();
+    private InputStream wrapStream(InputStream is) {
         List<ProductPlugin> productPlugins = productPluginManager.getProductPlugins();
-        List<ProductPlugin> reversedProductPlugins = new ArrayList<>(productPlugins);
-        Collections.reverse(reversedProductPlugins);
-        for (ProductPlugin productPlugin : reversedProductPlugins) {
-            inputStream = productPlugin.deserializationWrap(inputStream);
-        }
-        return inputStream;
-    }
 
+        for (ProductPlugin productPlugin : productPlugins) {
+            is = productPlugin.deserializationWrap(is);
+        }
+
+        return is;
+    }
     /**
      * Deserialize list of products
      *
@@ -71,6 +69,7 @@ public class ProductDeserializationCommand extends AbstractCommand {
         List<Product> productList = new ArrayList<>();
         jp.nextToken();
         String productsFieldName = jp.nextFieldName();
+
         if ("object_serialization/products".equals(productsFieldName)) {
             while (jp.nextToken() != JsonToken.END_ARRAY) {
                 if (jp.getCurrentToken() == JsonToken.START_OBJECT) {
@@ -96,9 +95,9 @@ public class ProductDeserializationCommand extends AbstractCommand {
      */
     private Product parseProduct(JsonParser jp) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         String productTypeFieldName = jp.nextFieldName();
+
         if ("productType".equals(productTypeFieldName)) {
             String productType = jp.nextTextValue();
-            ProductPluginManager productPluginManager = productMenu.getProductPluginManager();
             Product newProduct = (Product) Class.forName(productType, true, productPluginManager.getUrlClassLoader()).newInstance();
             jp.nextFieldName();
             int cost = jp.nextIntValue(0);

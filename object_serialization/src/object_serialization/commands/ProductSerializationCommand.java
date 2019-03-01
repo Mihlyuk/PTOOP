@@ -2,7 +2,6 @@ package object_serialization.commands;
 
 import object_serialization.view.ProductMenu;
 import object_serialization.products.ProductPlugin;
-import object_serialization.products.ProductPluginManager;
 import object_serialization.products.Product;
 import com.fasterxml.jackson.core.JsonGenerator;
 import de.undercouch.bson4jackson.BsonFactory;
@@ -11,6 +10,9 @@ import de.undercouch.bson4jackson.BsonGenerator;
 import java.io.*;
 import java.util.List;
 
+/**
+ * Command to serialize product list
+ */
 @CommandItem
 public class ProductSerializationCommand extends AbstractCommand {
 
@@ -25,13 +27,6 @@ public class ProductSerializationCommand extends AbstractCommand {
 
     @Override
     public void run() {
-        runSerializeProductList();
-    }
-
-    /**
-     * Starts serialize products
-     */
-    private void runSerializeProductList() {
         String serializeFilePath = "object_serialization/resources/products.bson";
 
         try {
@@ -50,11 +45,12 @@ public class ProductSerializationCommand extends AbstractCommand {
     }
 
     private OutputStream wrapStream(OutputStream os) {
-        ProductPluginManager productPluginManager = productMenu.getProductPluginManager();
         List<ProductPlugin> productPlugins = productPluginManager.getProductPlugins();
+
         for (ProductPlugin productPlugin : productPlugins) {
             os = productPlugin.serializationWrap(os);
         }
+
         return os;
     }
 

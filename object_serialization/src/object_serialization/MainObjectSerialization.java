@@ -1,6 +1,6 @@
 package object_serialization;
 
-import object_serialization.plugin.ProductPluginManager;
+import object_serialization.products.ProductPluginManager;
 import object_serialization.view.ProductMenu;
 
 import java.util.Arrays;

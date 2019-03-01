@@ -1,20 +1,21 @@
 package object_serialization.commands;
 
+import object_serialization.products.Product;
 import object_serialization.view.ProductMenu;
 
 /**
- * Removes product by index
+ * Gets tax from product
  */
 @CommandItem
-public class RemoveProductCommand extends AbstractCommand {
+public class GetTaxCommand extends AbstractCommand {
 
-    public RemoveProductCommand(ProductMenu productMenu) {
+    public GetTaxCommand(ProductMenu productMenu) {
         super(productMenu);
     }
 
     @Override
     public String getCommandName() {
-        return "Remove product";
+        return "Get tax";
     }
 
     @Override
@@ -28,16 +29,11 @@ public class RemoveProductCommand extends AbstractCommand {
             System.out.println("Please, input index of product: ");
 
             Integer productIndex = readInteger();
-            if (isValidProductIndex(productIndex)) {
-                products.remove(productIndex.intValue());
+            if (productIndex != null && productIndex.compareTo(products.size()) < 0) {
+                Product product = products.get(productIndex);
+                System.out.println(product.getTax());
                 break;
-            } else {
-                System.out.println("Please, input number: 0-" + (products.size()));
             }
         }
-    }
-
-    private boolean isValidProductIndex(Integer productIndex) {
-        return productIndex != null && productIndex.compareTo(products.size()) < 0;
     }
 }
