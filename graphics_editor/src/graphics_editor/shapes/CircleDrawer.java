@@ -1,6 +1,7 @@
-package graphics_editor.drawers;
+package graphics_editor.shapes;
 
-import graphics_editor.shapes.CircleShape;
+import graphics_editor.drawers.CircleShape;
+import graphics_editor.drawers.Drawer;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;

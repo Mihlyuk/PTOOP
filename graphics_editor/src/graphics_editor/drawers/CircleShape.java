@@ -1,7 +1,7 @@
-package graphics_editor.shapes;
+package graphics_editor.drawers;
 
-import graphics_editor.drawers.CircleDrawer;
-import graphics_editor.drawers.Drawer;
+import graphics_editor.shapes.CircleDrawer;
+import graphics_editor.shapes.Shape;
 import graphics_editor.shapes.base.PointShape;
 
 import java.util.ArrayList;
